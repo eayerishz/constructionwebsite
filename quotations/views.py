@@ -3,7 +3,7 @@ from .models import Project, ProjectElement, Material
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
-
+from django.contrib.auth import logout
 
 def register(request):
     if request.method == 'POST':
@@ -42,3 +42,7 @@ def login_view(request):
     else:
         form = AuthenticationForm()
     return render(request, 'quotations/login.html', {'form': form})
+
+def user_logout(request):
+    logout(request)
+    return redirect('login')  # Redirect to your login page or any other page

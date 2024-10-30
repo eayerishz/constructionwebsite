@@ -5,28 +5,119 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <title>Create Project</title>
+    <title>Create Project - Construction Project Quotation System</title>
+    <style>
+        body {
+            background-color: #f8f9fa; /* Light gray background */
+            font-family: Arial, sans-serif;
+        }
+        .project-container {
+            max-width: 600px;
+            margin: auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .btn-primary {
+            width: 100%; /* Full width button */
+        }
+        .btn-secondary {
+            width: 100%; /* Full width button */
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
-        <h2>Create a New Project</h2>
-        <form method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="area_size">Area Size (sq.m)</label>
-                <input type="number" class="form-control" id="area_size" name="area_size" required>
-            </div>
-            <div class="form-group">
-                <label for="description">Project Description</label>
-                <input type="text" class="form-control" id="description" name="description" required>
-            </div>
-            <div class="form-group">
-                <label for="location">Location</label>
-                <input type="text" class="form-control" id="location" name="location" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Create Project</button>
-        </form>
-        <a href="{% url 'project_list' %}" class="btn btn-secondary mt-3">View Project List</a>
+        <div class="project-container">
+            <h2>Create a New Project</h2>
+            <form id="quotationForm" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="area_size">Area Size (sq.m)</label>
+                    <input type="number" class="form-control" id="area_size" name="area_size" required>
+                </div>
+                <div class="form-group">
+                    <label>Select Project Elements:</label>
+                    <div>
+                        <label><input type="radio" name="projectElement" value="Foundation" onclick="updateMaterials()"> Foundation</label><br>
+                        <label><input type="radio" name="projectElement" value="Walls" onclick="updateMaterials()"> Walls</label><br>
+                        <label><input type="radio" name="projectElement" value="Roof" onclick="updateMaterials()"> Roof</label><br>
+                        <label><input type="radio" name="projectElement" value="Flooring" onclick="updateMaterials()"> Flooring</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Select Materials:</label>
+                    <fieldset id="materialsFieldset">
+                        <!-- Dynamic materials will be injected here -->
+                    </fieldset>
+                </div>
+                <button type="submit" class="btn btn-primary">Request Quotation</button>
+            </form>
+            <a href="{% url 'project_list' %}" class="btn btn-secondary mt-3">View Project List</a>
+        </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <script>
+        function updateMaterials() {
+            const materialsFieldset = document.getElementById('materialsFieldset');
+            materialsFieldset.innerHTML = ''; // Clear previous materials
+
+            const selectedElement = document.querySelector('input[name="projectElement"]:checked');
+            if (!selectedElement) return; // Exit if no element is selected
+
+            let materials = [];
+
+            switch (selectedElement.value) {
+                case 'Foundation':
+                    materials = ['Concrete', 'Gravel'];
+                    break;
+                case 'Walls':
+                    materials = ['Brick', 'Drywall'];
+                    break;
+                case 'Roof':
+                    materials = ['Shingles', 'Metal'];
+                    break;
+                case 'Flooring':
+                    materials = ['Tile', 'Wood'];
+                    break;
+            }
+
+            materials.forEach(material => {
+                materialsFieldset.innerHTML += `<label><input type="radio" name="material" value="${material}"> ${material}</label><br>`;
+            });
+        }
+
+        // Handle form submission
+        document.getElementById('quotationForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const areaSize = document.getElementById('area_size').value;
+            const selectedElement = document.querySelector('input[name="projectElement"]:checked');
+            const selectedMaterial = document.querySelector('input[name="material"]:checked');
+
+            if (!selectedElement || !selectedMaterial) {
+                alert("Please select a project element and a material.");
+                return;
+            }
+
+            const quotationData = {
+                areaSize,
+                projectElement: selectedElement.value,
+                material: selectedMaterial.value
+            };
+
+            // Send the quotation data to the server for processing
+            console.log(quotationData);
+            // TO DO: Implement server-side logic to process the quotation request
+        });
+    </script>
 </body>
 </html>
