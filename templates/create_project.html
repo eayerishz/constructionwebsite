@@ -47,7 +47,11 @@
                         <label><input type="radio" name="projectElement" value="Foundation" onclick="updateMaterials()"> Foundation</label><br>
                         <label><input type="radio" name="projectElement" value="Walls" onclick="updateMaterials()"> Walls</label><br>
                         <label><input type="radio" name="projectElement" value="Roof" onclick="updateMaterials()"> Roof</label><br>
-                        <label><input type="radio" name="projectElement" value="Flooring" onclick="updateMaterials()"> Flooring</label>
+                        <label><input type="radio" name="projectElement" value="Flooring" onclick="updateMaterials()"> Flooring</label><br>
+                        <label><input type="radio" name="projectElement" value="Framing" onclick="updateMaterials()"> Framing</label><br>
+                        <label><input type="radio" name="projectElement" value="Window and Door Installation" onclick="updateMaterials()"> Window and Door Installation</label><br>
+                        <label><input type="radio" name="projectElement" value="Electrical" onclick="updateMaterials()"> Electrical</label><br>
+                        <label><input type="radio" name="projectElement" value="Plumbing" onclick="updateMaterials()"> Plumbing</label>
                     </div>
                 </div>
                 <div class="form-group">
@@ -65,7 +69,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    
+
     <script>
         function updateMaterials() {
             const materialsFieldset = document.getElementById('materialsFieldset');
@@ -88,6 +92,18 @@
                     break;
                 case 'Flooring':
                     materials = ['Tile', 'Wood'];
+                    break;
+                case 'Framing':
+                    materials = ['Exterior Wall Framing', 'Roof Framing','Door Framing'];
+                    break;
+                case 'Window and Door Installation':
+                    materials = ['Barn Door', 'Sliding Door',"Sliding Window"];
+                    break;
+                 case 'Electrical':
+                    materials = ['Light Switches', 'Main Panel'];
+                    break;
+                case 'Plumbing':
+                    materials = ['Shower Fixture', 'Toilet Installation'];
                     break;
             }
 
