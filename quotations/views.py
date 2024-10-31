@@ -2,11 +2,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Project, ProjectElement, Material
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .forms import QuotationForm
-import datetime
 from django.contrib.admin.views.decorators import staff_member_required
+from .forms import QuotationForm
 from django.contrib.auth.decorators import login_required
-
+import datetime
 
 def register(request):
     if request.method == 'POST':
@@ -55,21 +54,35 @@ def user_logout(request):
 def create_project(request):
     if request.method == 'POST':
         area_size = request.POST.get('area_size')
-        project_element = request.POST.get('projectElement')
-        material = request.POST.get('material')
+        project_element_name = request.POST.get('projectElement')
+        material_name = request.POST.get('material')
+        material_quantity = request.POST.get('material_quantity')  # Assuming you have a field for quantity
 
         # Create a new Project instance with the logged-in user
         project = Project(
             name=f"Project for {request.user.username}",  # Customize this as needed
             status='Pending',  # Set status to 'Pending'
-            start_date=datetime.date.today(),  # Ensure the field name matches your model
-            end_date=None,  # Adjust based on your requirements
-            user=request.user  # Set the user field to the current user
+            start_date=datetime.date.today(),
+            end_date=None,
+            user=request.user
         )
         project.save()
 
-        # Process the quotation data as needed
-        print(f"Area Size: {area_size}, Element: {project_element}, Material: {material}")
+        # Create a ProjectElement instance
+        project_element = ProjectElement(
+            project=project,
+            name=project_element_name,
+            description=f"Element for {project_element_name}"
+        )
+        project_element.save()
+
+        # Create a Material instance
+        material = Material(
+            project_element=project_element,
+            name=material_name,
+            quantity=int(material_quantity)  # Ensure this is an integer
+        )
+        material.save()
 
         return redirect('project_list')  # Redirect to project list after saving
 

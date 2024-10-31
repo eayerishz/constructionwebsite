@@ -26,7 +26,7 @@
     <div class="container mt-5">
         <div class="project-container">
             <h2>Create a New Project</h2>
-            <form id="quotationForm" method="post" action="{% url 'create_quotation' %}">
+            <form id="quotationForm" method="post" action="{% url 'create_project' %}">
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="area_size">Area Size (sq.m)</label>
@@ -50,6 +50,10 @@
                     <fieldset id="materialsFieldset">
                         <!-- Dynamic materials will be injected here -->
                     </fieldset>
+                </div>
+                <div class="form-group">
+                    <label for="material_quantity">Material Quantity:</label>
+                    <input type="number" class="form-control" id="material_quantity" name="material_quantity" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Request Quotation</button>
             </form>

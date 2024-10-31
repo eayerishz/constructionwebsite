@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User  # Import the User model
+from django.contrib.auth.models import User
 import datetime
 
 class Project(models.Model):
@@ -11,7 +11,6 @@ class Project(models.Model):
     def __str__(self):
         return self.name
 
-
 class ProjectElement(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)  # Changed to snake_case
@@ -19,7 +18,6 @@ class ProjectElement(models.Model):
 
     def __str__(self):
         return f"Element of {self.project.name}"
-
 
 class Material(models.Model):
     element = models.ForeignKey(ProjectElement, related_name='materials', on_delete=models.CASCADE)
