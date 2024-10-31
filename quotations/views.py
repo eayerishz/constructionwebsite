@@ -4,9 +4,9 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .forms import QuotationForm
 import datetime
-from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
-from .models import Project
+from django.contrib.auth.decorators import login_required
+
 
 def register(request):
     if request.method == 'POST':

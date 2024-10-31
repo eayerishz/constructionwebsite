@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from django.contrib import admin
-from quotations.views import home, login_view, project_detail, create_project
+from quotations.views import home, login_view, project_detail, create_project  # Import project_detail here
 from .views import user_logout, approve_project
 
 urlpatterns = [
