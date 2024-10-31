@@ -6,20 +6,20 @@
 {% block extra_styles %}
 <style>
     body {
-        background-color: #f8f9fa; /* Light gray background */
+        background-color: #f8f9fa;
         font-family: Arial, sans-serif;
     }
     .card {
-        transition: transform 0.2s; /* Smooth hover effect */
+        transition: transform 0.2s;
     }
     .card:hover {
-        transform: scale(1.05); /* Slightly enlarge card on hover */
+        transform: scale(1.05);
     }
     .no-projects {
         text-align: center;
         margin-top: 20px;
         font-size: 1.2em;
-        color: #6c757d; /* Muted text color */
+        color: #6c757d;
     }
 </style>
 {% endblock %}
@@ -27,26 +27,109 @@
 {% block content %}
 <div class="container mt-5">
     <h2>Your Project Quotations</h2>
+
     <div class="row">
-       {% for project in projects %}
-<div class="col-md-4 mb-4">
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Project ID: {{ project.id }}</h5>
-            <p class="card-text"><strong>Description:</strong> {{ project.description }}</p>
-            <p class="card-text"><strong>Location:</strong> {{ project.location }}</p>
-            <p class="card-text"><strong>Status:</strong> {{ project.status }}</p> <!-- Displaying status -->
-            <a href="{% url 'project_detail' project.id %}" class="btn btn-primary">View Details</a>
+        <div class="col-md-6 mb-4">
+            <h4>Pending Projects</h4>
+            {% if projects.pendings %}
+                {% for project in projects.pendings %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Project ID: {{ project.id }}</h5>
+                            <p class="card-text"><strong>Description:</strong> {{ project.description }}</p>
+                            <p class="card-text"><strong>Location:</strong> {{ project.location }}</p>
+                            <p class="card-text"><strong>Status:</strong> {{ project.status }}</p>
+
+                            <a href="{% url 'project_detail' project.id %}" class="btn btn-primary">View Details</a>
+
+                            {% if user.is_superuser %}
+                                <a href="{% url 'edit_project' project.id %}" class="btn btn-warning mt-2">Edit Project</a>
+                                <a href="#" class="btn btn-danger mt-2">Delete Project</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-projects">No pending projects found.</div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <h4>Approved Projects</h4>
+            {% if projects.approved %}
+                {% for project in projects.approved %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Project ID: {{ project.id }}</h5>
+                            <p class="card-text"><strong>Description:</strong> {{ project.description }}</p>
+                            <p class="card-text"><strong>Location:</strong> {{ project.location }}</p>
+                            <p class="card-text"><strong>Status:</strong> {{ project.status }}</p>
+
+                            <a href="{% url 'project_detail' project.id %}" class="btn btn-primary">View Details</a>
+
+                            {% if user.is_superuser %}
+                                <a href="{% url 'edit_project' project.id %}" class="btn btn-warning mt-2">Edit Project</a>
+                                <a href="#" class="btn btn-danger mt-2">Delete Project</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-projects">No approved projects found.</div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <h4>Declined Projects</h4>
+            {% if projects.declined %}
+                {% for project in projects.declined %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Project ID: {{ project.id }}</h5>
+                            <p class="card-text"><strong>Description:</strong> {{ project.description }}</p>
+                            <p class="card-text"><strong>Location:</strong> {{ project.location }}</p>
+                            <p class="card-text"><strong>Status:</strong> {{ project.status }}</p>
+
+                            <a href="{% url 'project_detail' project.id %}" class="btn btn-primary">View Details</a>
+
+                            {% if user.is_superuser %}
+                                <a href="{% url 'edit_project' project.id %}" class="btn btn-warning mt-2">Edit Project</a>
+                                <a href="#" class="btn btn-danger mt-2">Delete Project</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-projects">No declined projects found.</div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <h4>Completed Projects</h4>
+            {% if projects.completed %}
+                {% for project in projects.completed %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Project ID: {{ project.id }}</h5>
+                            <p class="card-text"><strong>Description:</strong> {{ project.description }}</p>
+                            <p class="card-text"><strong>Location:</strong> {{ project.location }}</p>
+                            <p class="card-text"><strong>Status:</strong> {{ project.status }}</p>
+
+                            <a href="{% url 'project_detail' project.id %}" class="btn btn-primary">View Details</a>
+
+                            {% if user.is_superuser %}
+                                <a href="{% url 'edit_project' project.id %}" class="btn btn-warning mt-2">Edit Project</a>
+                                <a href="#" class="btn btn-danger mt-2">Delete Project</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-projects">No completed projects found.</div>
+            {% endif %}
         </div>
     </div>
-</div>
-{% empty %}
-<div class="col-12 no-projects">
-    <p>No projects found. Please create a new project.</p>
-</div>
-{% endfor %}
 
-    </div>
     <a href="{% url 'create_quotation' %}" class="btn btn-secondary mt-3">Request a Quote</a>
 
     <!-- Logout Button -->

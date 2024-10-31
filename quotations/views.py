@@ -3,10 +3,13 @@ from .forms import QuotationForm
 from .models import Project, ProjectElement, Material
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 import datetime
+
+# Helper function to check if the user is a superuser
+def is_superuser(user):
+    return user.is_superuser
 
 def register(request):
     if request.method == 'POST':
@@ -20,14 +23,13 @@ def register(request):
     return render(request, 'register.html', {'form': form})
 
 def project_detail(request, project_id):
+    # All users can view project details
     project = get_object_or_404(Project, id=project_id)
     return render(request, 'project_detail.html', {'project': project})
 
 def home(request):
-    if request.user.is_authenticated:
-        projects = Project.objects.filter(user=request.user)
-    else:
-        projects = Project.objects.none()
+    # Show all projects to all authenticated users
+    projects = Project.objects.all() if request.user.is_authenticated else Project.objects.none()
     return render(request, 'quotations/home.html', {'projects': projects})
 
 def login_view(request):
@@ -41,7 +43,6 @@ def login_view(request):
                 login(request, user)
                 return redirect('project_list')
         else:
-            # Add an error message here if desired
             form.add_error(None, "Invalid username or password")
     else:
         form = AuthenticationForm()
@@ -58,41 +59,39 @@ def create_project(request):
         project_element = request.POST.get('projectElement')
         material = request.POST.get('material')
 
-        # Create a new Project instance with the logged-in user
         project = Project(
-            name=f"Project for {request.user.username}",  # Customize this as needed
-            status='Pending',  # Set status to 'Pending'
-            start_date=datetime.date.today(),  # Ensure the field name matches your model
-            end_date=None,  # Adjust based on your requirements
-            user=request.user  # Set the user field to the current user
+            name=f"Project for {request.user.username}",
+            status='Pending',
+            start_date=datetime.date.today(),
+            end_date=None,
+            user=request.user
         )
         project.save()
-
-        # Process the quotation data as needed
         print(f"Area Size: {area_size}, Element: {project_element}, Material: {material}")
 
-        return redirect('project_list')  # Redirect to project list after saving
+        return redirect('project_list')
 
-    form = QuotationForm()  # If you have a form to show on GET
+    form = QuotationForm()
     return render(request, 'create_project.html', {'form': form})
 
-
+@login_required
 def project_list(request):
-    if request.user.is_authenticated:
-        projects = Project.objects.filter(user=request.user)
-    else:
-        projects = Project.objects.none()  # Return an empty queryset if not authenticated
+    projects = {
+        'pendings': Project.objects.filter(status='Pending'),
+        'approved': Project.objects.filter(status='Approved'),
+        'declined': Project.objects.filter(status='Declined'),
+        'completed': Project.objects.filter(status='Completed'),
+    }
     return render(request, 'project_list.html', {'projects': projects})
+# Admin-only views
 
-@staff_member_required
 def approve_project(request, project_id):
     project = get_object_or_404(Project, id=project_id)
-    project.status = 'Approved'  # Set the project status to Approved
+    project.status = 'Approved'
     project.save()
-    return redirect('project_list')  # Redirect to project list view
+    return redirect('project_list')
 
 
-@staff_member_required
 def admin_dashboard(request):
     pending_projects = Project.objects.filter(status='Pending')
     approved_projects = Project.objects.filter(status='Approved')
@@ -106,35 +105,39 @@ def admin_dashboard(request):
         'completed_projects': completed_projects,
     })
 
-@staff_member_required
+
+
+@login_required
 def update_project(request, project_id):
+    # Fetch the project or return a 404 error if not found
     project = get_object_or_404(Project, id=project_id)
 
+    # Handle form submission
     if request.method == 'POST':
-        project.name = request.POST.get('name', project.name)
-        project.status = request.POST.get('status', project.status)
-        project.save()
+        project.name = request.POST.get('name', project.name)  # Update project name
+        project.status = request.POST.get('status', project.status)  # Update project status
+        project.save()  # Save changes to the database
+        return redirect('project_list')  # Redirect to admin dashboard after saving
 
-        # You can implement additional logic to add/remove elements/materials here.
-
-        return redirect('admin_dashboard')
-
+    # Fetch related project elements and materials to display in the form
     project_elements = ProjectElement.objects.filter(project=project)
     materials = Material.objects.filter(element__project=project)
 
+    # Render the update form with the current project data
     return render(request, 'update_project.html', {
         'project': project,
         'project_elements': project_elements,
         'materials': materials,
     })
 
-@staff_member_required
+
+
 def remove_project_element(request, element_id):
     element = get_object_or_404(ProjectElement, id=element_id)
     element.delete()
     return JsonResponse({'message': 'Element removed successfully.'})
 
-@staff_member_required
+
 def remove_material(request, material_id):
     material = get_object_or_404(Material, id=material_id)
     material.delete()
