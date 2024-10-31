@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Detail</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Project Detail: {{ project.name }}</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ project_form.as_p }}
+        <button type="submit">Update Project</button>
+    </form>
+
+    <h2>Materials:</h2>
+    <ul id="material-list">
+        {% for material in materials %}
+        <li id="material-{{ material.id }}">
+            <input type="text" value="{{ material.name }}" readonly />
+            <input type="number" value="{{ material.price }}" class="material-price" data-id="{{ material.id }}" />
+            <input type="number" value="{{ material.quantity }}" class="material-quantity" data-id="{{ material.id }}" />
+            <input type="number" value="{{ material.markup_percentage }}" class="material-markup" data-id="{{ material.id }}" />
+            <span class="material-total-cost">$ {{ material.total_cost }}</span>
+            <button class="remove-material" data-id="{{ material.id }}">Remove</button>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <form id="add-material-form">
+        {% csrf_token %}
+        {{ material_form.as_p }}
+        <button type="submit">Add Material</button>
+    </form>
+
+    {% if project.status == 'pending' %}
+        <button onclick="location.href='{% url 'user_approve_project' project.id %}'">Approve Project</button>
+        <button onclick="location.href='{% url 'decline_project' project.id %}'">Decline Project</button>
+    {% endif %}
+
+    {% if project.status == 'approved_by_user' and request.user.is_staff %}
+        <button onclick="location.href='{% url 'complete_project' project.id %}'">Mark as Completed</button>
+    {% endif %}
+
+    <script>
+        $(document).ready(function() {
+            $('#add-material-form').submit(function(event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "add_material" %}',
+                    data: formData,
+                    success: function(data) {
+                        $('#material-list').append('<li id="material-' + data.id + '"><input type="text" value="' + data.name + '" readonly /><input type="number" value="' + data.price + '" class="material-price" data-id="' + data.id + '" /><input type="number" value="' + data.quantity + '" class="material-quantity" data-id="' + data.id + '" /><input type="number" value="' + data.markup_percentage + '" class="material-markup" data-id="' + data.id + '" /><span class="material-total-cost">$ ' + data.total_cost + '</span><button class="remove-material" data-id="' + data.id + '">Remove</button></li>');
+                    }
+                });
+            });
+
+            $(document).on('change', '.material-price, .material-quantity, .material-markup', function() {
+                var materialId = $(this).data('id');
+                var price = $('#material-' + materialId).find('.material-price').val();
+                var quantity = $('#material-' + materialId).find('.material-quantity').val();
+                var markupPercentage = $('#material-' + materialId).find('.material-markup').val();
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "update_material" materialId %}',
+                    data: {
+                        'price': price,
+                        'quantity': quantity,
+                        'markup_percentage': markupPercentage
+                    },
+                    success: function(data) {
+                        $('#material-' + materialId).find('.material-total-cost').text('$ ' + data.total_cost);
+                    }
+                });
+            });
+
+            $(document).on('click', '.remove-material', function() {
+                var materialId = $(this).data('id');
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "remove_material" project_id=project.id materialId=materialId %}',
+                    success: function(data) {
+                        $('#material-' + materialId).remove();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
