@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 import datetime
 
-# Helper function to check if the user is a superuser
+
 def is_superuser(user):
     return user.is_superuser
 
@@ -83,14 +83,12 @@ def project_list(request):
         'completed': Project.objects.filter(status='Completed'),
     }
     return render(request, 'project_list.html', {'projects': projects})
-# Admin-only views
 
 def approve_project(request, project_id):
     project = get_object_or_404(Project, id=project_id)
     project.status = 'Approved'
     project.save()
     return redirect('project_list')
-
 
 def admin_dashboard(request):
     pending_projects = Project.objects.filter(status='Pending')
@@ -104,8 +102,6 @@ def admin_dashboard(request):
         'declined_projects': declined_projects,
         'completed_projects': completed_projects,
     })
-
-
 
 @login_required
 def update_project(request, project_id):
@@ -130,13 +126,10 @@ def update_project(request, project_id):
         'materials': materials,
     })
 
-
-
 def remove_project_element(request, element_id):
     element = get_object_or_404(ProjectElement, id=element_id)
     element.delete()
     return JsonResponse({'message': 'Element removed successfully.'})
-
 
 def remove_material(request, material_id):
     material = get_object_or_404(Material, id=material_id)
