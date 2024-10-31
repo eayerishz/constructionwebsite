@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details - Construction Project Quotation System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa; /* Light gray background */
+            font-family: Arial, sans-serif;
+        }
+        .project-container {
+            max-width: 800px;
+            margin: auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .project-info {
+            margin-bottom: 20px;
+        }
+        .material-table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .material-table th, .material-table td {
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="project-container">
+            <h2>Project Details</h2>
+
+            <div class="project-info">
+                <p><strong>Project ID:</strong> {{ project.id }}</p>
+                <p><strong>Description:</strong> {{ project.description }}</p>
+                <p><strong>Location:</strong> {{ project.location }}</p>
+                <p><strong>Status:</strong> {{ project.status }}</p>
+                <p><strong>Created On:</strong> {{ project.created_at }}</p>
+                <p><strong>Updated On:</strong> {{ project.updated_at }}</p>
+            </div>
+
+            <h4>Project Elements and Materials</h4>
+            <table class="table table-bordered material-table">
+                <thead>
+                    <tr>
+                        <th>Project Element</th>
+                        <th>Material</th>
+                        <th>Quantity</th>
+                        <th>Unit</th>
+                        <th>Price per Qty</th>
+                        <th>Total Cost</th>
+                        <th>Markup %</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for element in project.elements.all %}
+                        {% for material in element.materials.all %}
+                            <tr>
+                                <td>{{ element.name }}</td>
+                                <td>{{ material.name }}</td>
+                                <td>{{ material.quantity }}</td>
+                                <td>{{ material.unit }}</td>
+                                <td>${{ material.price_per_qty }}</td>
+                                <td>${{ material.total_cost }}</td>
+                                <td>{{ material.markup_percentage }}%</td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="text-center">
+                <a href="{% url 'project_list' %}" class="btn btn-secondary">Back to Project List</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

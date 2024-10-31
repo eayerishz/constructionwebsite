@@ -8,7 +8,7 @@ class UserRegistrationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password']
+        fields = ['username', 'email']
 
     def clean(self):
         cleaned_data = super().clean()
@@ -21,14 +21,19 @@ class UserRegistrationForm(forms.ModelForm):
 class ProjectCreationForm(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ['name', 'description', 'startDate', 'endDate']
+        fields = ['name', 'start_date', 'end_date', 'user', 'status']  # Changed to snake_case
 
 class ProjectElementForm(forms.ModelForm):
     class Meta:
         model = ProjectElement
-        fields = ['project', 'createdAt', 'updatedAt']
+        exclude = ['created_at', 'updated_at']
 
 class MaterialForm(forms.ModelForm):
     class Meta:
         model = Material
-        fields = ['name', 'description', 'unit']
+        exclude = ['created_at', 'updated_at']
+
+class QuotationForm(forms.ModelForm):
+    class Meta:
+        model = Project  # Ensure this is the correct model
+        fields = ['name', 'start_date', 'end_date']  # Update fields based on the actual model

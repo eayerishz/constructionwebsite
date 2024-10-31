@@ -1,66 +1,51 @@
+{% extends "quotations/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <title>Home - Construction Project Quotation System</title>
-    <style>
-        body {
-            background-color: #f8f9fa; /* Light gray background */
-            font-family: 'Roboto', sans-serif;
-        }
-        .hero {
-            background-color: #343a40; /* Dark gray */
-            color: white;
-            padding: 60px 30px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
-            margin-bottom: 50px;
-        }
-        .btn-primary {
-            background-color: #007bff; /* Blue */
-            color: white;
-            border-radius: 5px;
-            padding: 10px 30px;
-            font-size: 1.1rem;
-        }
-        .btn-outline-primary {
-            border-color: #007bff; /* Blue */
-            color: #007bff;
-            border-radius: 5px;
-            padding: 10px 30px;
-            font-size: 1.1rem;
-        }
-        footer {
-            margin-top: 50px;
-            text-align: center;
-            padding: 20px 0;
-            background-color: #343a40; /* Dark gray */
-            color: white;
-            position: relative;
-            bottom: 0;
-            width: 100%;
-        }
-        h1 {
-            font-size: 2.5rem; /* Larger title */
-            margin-bottom: 20px;
-        }
-        p {
-            font-size: 1.2rem; /* Slightly larger paragraph text */
-        }
-    </style>
-</head>
-<body>
-    <div class="container mt-5">
-        <div class="hero">
-            <h1>Welcome to the Construction Project Quotation System</h1>
-            <p class="mt-4">
-                <a href="{% url 'register' %}" class="btn btn-primary btn-lg">Register</a>
-                <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg">Login</a>
-            </p>
-        </div>
-    </div ⬤
+
+{% block title %}Home - Construction Project Quotation System{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="hero">
+        <h1>Welcome to the Construction Project Quotation System</h1>
+        <p class="mt-4">
+            <a href="{% url 'register' %}" class="btn btn-primary btn-lg">Register</a>
+            <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg">Login</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_styles %}
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Roboto', sans-serif;
+    }
+    .hero {
+        background-color: #343a40;
+        color: white;
+        padding: 60px 30px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
+        margin-bottom: 50px;
+    }
+    footer {
+        margin-top: 50px;
+        text-align: center;
+        padding: 20px 0;
+        background-color: #343a40;
+        color: white;
+        position: relative;
+        bottom: 0;
+        width: 100%;
+    }
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+    }
+    p {
+        font-size: 1.2rem;
+    }
+</style>
+{% endblock %}

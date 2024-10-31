@@ -1,16 +1,10 @@
+{% extends 'quotations/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <title>Create Project - Construction Project Quotation System</title>
+
+{% block title %}Create Project - Construction Project Quotation System{% endblock %}
+
+{% block content %}
     <style>
-        body {
-            background-color: #f8f9fa; /* Light gray background */
-            font-family: Arial, sans-serif;
-        }
         .project-container {
             max-width: 600px;
             margin: auto;
@@ -23,19 +17,16 @@
             margin-bottom: 20px;
             text-align: center;
         }
-        .btn-primary {
-            width: 100%; /* Full width button */
-        }
+        .btn-primary,
         .btn-secondary {
             width: 100%; /* Full width button */
         }
     </style>
-</head>
-<body>
+
     <div class="container mt-5">
         <div class="project-container">
             <h2>Create a New Project</h2>
-            <form id="quotationForm" method="post">
+            <form id="quotationForm" method="post" action="{% url 'create_quotation' %}">
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="area_size">Area Size (sq.m)</label>
@@ -66,10 +57,6 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
     <script>
         function updateMaterials() {
             const materialsFieldset = document.getElementById('materialsFieldset');
@@ -94,12 +81,12 @@
                     materials = ['Tile', 'Wood'];
                     break;
                 case 'Framing':
-                    materials = ['Exterior Wall Framing', 'Roof Framing','Door Framing'];
+                    materials = ['Exterior Wall Framing', 'Roof Framing', 'Door Framing'];
                     break;
                 case 'Window and Door Installation':
-                    materials = ['Barn Door', 'Sliding Door',"Sliding Window"];
+                    materials = ['Barn Door', 'Sliding Door', 'Sliding Window'];
                     break;
-                 case 'Electrical':
+                case 'Electrical':
                     materials = ['Light Switches', 'Main Panel'];
                     break;
                 case 'Plumbing':
@@ -111,29 +98,5 @@
                 materialsFieldset.innerHTML += `<label><input type="radio" name="material" value="${material}"> ${material}</label><br>`;
             });
         }
-
-        // Handle form submission
-        document.getElementById('quotationForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const areaSize = document.getElementById('area_size').value;
-            const selectedElement = document.querySelector('input[name="projectElement"]:checked');
-            const selectedMaterial = document.querySelector('input[name="material"]:checked');
-
-            if (!selectedElement || !selectedMaterial) {
-                alert("Please select a project element and a material.");
-                return;
-            }
-
-            const quotationData = {
-                areaSize,
-                projectElement: selectedElement.value,
-                material: selectedMaterial.value
-            };
-
-            // Send the quotation data to the server for processing
-            console.log(quotationData);
-            // TO DO: Implement server-side logic to process the quotation request
-        });
     </script>
-</body>
-</html>
+{% endblock %}
