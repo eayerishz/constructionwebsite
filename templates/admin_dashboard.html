@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+
+        <h2>Pending Projects</h2>
+        <ul>
+            {% for project in pending_projects %}
+                <li>
+                    <a href="{% url 'update_project' project.id %}">{{ project.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <h2>Approved Projects</h2>
+        <ul>
+            {% for project in approved_projects %}
+                <li>{{ project.name }}</li>
+            {% endfor %}
+        </ul>
+
+        <h2>Declined Projects</h2>
+        <ul>
+            {% for project in declined_projects %}
+                <li>{{ project.name }}</li>
+            {% endfor %}
+        </ul>
+
+        <h2>Completed Projects</h2>
+        <ul>
+            {% for project in completed_projects %}
+                <li>{{ project.name }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

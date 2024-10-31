@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Construction Project Quotation System{% endblock %}</title>
+    <title>{% block title %}CPQS{% endblock %}</title>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -18,20 +18,6 @@
     <header class="bg-dark text-white p-3">
         <div class="container">
             <h1 class="mb-0">Construction Project Quotation System</h1>
-            <nav>
-                <ul class="nav">
-                    {% if user.is_authenticated %}
-                        <!-- Show Home and Log Out if logged in -->
-                        <li class="nav-item">
-                            <a href="{% url 'project_list' %}" class="nav-link text-white">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{% url 'logout' %}" class="nav-link text-white">Log Out</a>
-                        </li>
-                    {% else %}
-                    {% endif %}
-                </ul>
-            </nav>
         </div>
     </header>
 

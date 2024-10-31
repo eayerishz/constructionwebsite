@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Project</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Update Project: {{ project.name }}</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="name" value="{{ project.name }}" required>
+            <select name="status">
+                <option value="Pending" {% if project.status == 'Pending' %}selected{% endif %}>Pending</option>
+                <option value="Approved" {% if project.status == 'Approved' %}selected{% endif %}>Approved</option>
+                <option value="Declined" {% if project.status == 'Declined' %}selected{% endif %}>Declined</option>
+                <option value="Completed" {% if project.status == 'Completed' %}selected{% endif %}>Completed</option>
+            </select>
+            <button type="submit">Update Project</button>
+        </form>
+
+        <h2>Project Elements</h2>
+        <ul>
+            {% for element in project_elements %}
+                <li>{{ element }}</li>
+                <button class="remove-element" data-id="{{ element.id }}">Remove</button>
+            {% endfor %}
+        </ul>
+
+        <h2>Materials</h2>
+        <ul>
+            {% for material in materials %}
+                <li>{{ material.name }}: {{ material.qty }} @ {{ material.price_per_qty }}</li>
+                <button class="remove-material" data-id="{{ material.id }}">Remove</button>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <script>
+        $(document).on('click', '.remove-element', function() {
+            var elementId = $(this).data('id');
+            $.ajax({
+                url: '/admin/projects/remove_element/' + elementId + '/',
+                type: 'DELETE',
+                success: function(response) {
+                    location.reload();
+                },
+                error: function(response) {
+                    alert('Error removing element.');
+                }
+            });
+        });
+
+        $(document).on('click', '.remove-material', function() {
+            var materialId = $(this).data('id');
+            $.ajax({
+                url: '/admin/projects/remove_material/' + materialId + '/',
+                type: 'DELETE',
+                success: function(response) {
+                    location.reload();
+                },
+                error: function(response) {
+                    alert('Error removing material.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
