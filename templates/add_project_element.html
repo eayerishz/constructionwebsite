@@ -38,7 +38,7 @@
 <body>
     <div class="container mt-5">
         <div class="project-container">
-            <h2>Project Details</h2>
+            <h2>Add Project Element</h2>
 
             {% if user.is_superuser %}
 
@@ -65,43 +65,6 @@
                     <p><strong>Updated On:</strong> {{ project.updated_at }}</p>
                 </div>
             {% endif %}
-
-            {% if user.is_superuser %}
-                <h5>Action</h5>
-
-                <a href="{% url 'add_project_element' project.id %}" class="btn btn-primary">Add Project Element</a>
-                <a href="{% url 'add_project_material' project.id %}" class="btn btn-primary">Add Material</a>
-            {% endif %}
-
-            <h4>Project Elements and Materials</h4>
-            <table class="table table-bordered material-table">
-                <thead>
-                    <tr>
-                        <th>Project Element</th>
-                        <th>Material</th>
-                        <th>Quantity</th>
-                        <th>Unit</th>
-                        <th>Price per Qty</th>
-                        <th>Total Cost</th>
-                        <th>Markup %</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for element in project.elements.all %}
-                        {% for material in element.materials.all %}
-                            <tr>
-                                <td>{{ element.name }}</td>
-                                <td>{{ material.name }}</td>
-                                <td>{{ material.quantity }}</td>
-                                <td>{{ material.unit }}</td>
-                                <td>${{ material.price_per_qty }}</td>
-                                <td>${{ material.total_cost }}</td>
-                                <td>{{ material.markup_percentage }}%</td>
-                            </tr>
-                        {% endfor %}
-                    {% endfor %}
-                </tbody>
-            </table>
 
             <div class="text-center">
                 <a href="{% url 'project_list' %}" class="btn btn-secondary">Back to Project List</a>
