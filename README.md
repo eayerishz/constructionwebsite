@@ -73,8 +73,8 @@ Ensure you have Python and Django installed.
 
 1. **Clone the repository:**
    ```bash
-   git clone <https://github.com/eayerishz/constructionwebsite.git>
-   cd <construction_project>
+   git clone <https://github.com/eayerishz/cpqs.git>
+   cd <cpqs>
 
 2. **Install Dependencies:**
    ```bash
